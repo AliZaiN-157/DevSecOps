@@ -33,20 +33,27 @@ jobs:
           echo "Running Trivy scan..."
           trivy fs .
 
-      # - name: Install and run Snyk
-      #   run: |
-      #     echo "Installing Snyk..."
-      #     npm install -g snyk
-      #     echo "Running Snyk test..."
-      #     snyk test --all-projects
-      #     echo "Running Snyk monitor..."
-      #     snyk monitor --all-projects
-
-      - name: Install and run OWASP Dependency-Check
+      - name: Install and run Snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          echo "Downloading and installing OWASP Dependency-Check..."
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
-          unzip dependency-check-12.1.0-release.zip
-          echo "Running OWASP Dependency-Check scan..."
-          cd dependency-check/bin
-          ./dependency-check.sh --scan ../.. --format ALL --nvdApiKey ${{ secrets.NVD_API_KEY }}
+          echo "Installing Snyk..."
+          npm install -g snyk
+
+          echo "Authenticating Snyk..."
+          snyk auth "${SNYK_TOKEN}"
+
+          echo "Running Snyk test..."
+          snyk test --all-projects
+
+          echo "Running Snyk monitor..."
+          snyk monitor --all-projects
+
+      # - name: Install and run OWASP Dependency-Check
+      #   run: |
+      #     echo "Downloading and installing OWASP Dependency-Check..."
+      #     wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
+      #     unzip dependency-check-12.1.0-release.zip
+      #     echo "Running OWASP Dependency-Check scan..."
+      #     cd dependency-check/bin
+      #     ./dependency-check.sh --scan ../.. --format ALL --nvdApiKey ${{ secrets.NVD_API_KEY }}
