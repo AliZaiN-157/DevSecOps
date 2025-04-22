@@ -45,8 +45,9 @@ jobs:
       - name: Install and run OWASP Dependency-Check
         run: |
           echo "Downloading and installing OWASP Dependency-Check..."
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.0.2/dependency-check-7.0.2-release.zip
-          unzip dependency-check-7.0.2-release.zip
+          # wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.0.2/dependency-check-7.0.2-release.zip
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
+          unzip dependency-check-12.1.0-release.zip
           echo "Running OWASP Dependency-Check scan..."
           cd dependency-check/bin
           ./dependency-check.sh --scan ../.. --format ALL
