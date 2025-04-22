@@ -1,0 +1,51 @@
+name: Build, Analyze, Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-analyze-scan:
+    name: Build, Analyze, and Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Disable shallow clone for better SonarQube analysis
+
+      #   - name: Build and analyze with SonarQube
+      #     uses: sonarsource/sonarqube-scan-action@master
+      #     env:
+      #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Install and run Trivy
+        run: |
+          # Install Trivy
+          sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy -y
+
+          # Run Trivy scan
+          trivy fs .
+
+      - name: Install and run OWASP Dependency-Check
+        run: |
+          # Download and unzip Dependency-Check
+          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/latest/download/dependency-check.zip
+          unzip dependency-check.zip -d dependency-check
+          cd dependency-check/dependency-check
+
+          # Run dependency-check on the project directory
+          ./bin/dependency-check.sh --project "MyProject" --scan ../../ --format "ALL" --out ../../dependency-check-report
+
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: dependency-check-report
