@@ -46,7 +46,7 @@ jobs:
           echo "Running Snyk test..."
           snyk test --all-projects
 
-          echo "Running Snyk monitor..."
+          echo "RMonitoring project with Snyk..."
           snyk monitor --all-projects
 
       # - name: Install and run OWASP Dependency-Check
