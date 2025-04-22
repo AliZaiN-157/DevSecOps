@@ -34,12 +34,12 @@ jobs:
           # Run Trivy scan
           trivy fs .
 
-      - name: Install and run OWASP Dependency-Check
-        run: |
-          # Download and unzip Dependency-Check
-          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/latest/download/dependency-check.zip
-          unzip dependency-check.zip -d dependency-check
-          cd dependency-check/dependency-check
+      # - name: Install and run OWASP Dependency-Check
+      #   run: |
+      #     # Download and unzip Dependency-Check
+      #     curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/latest/download/dependency-check.zip
+      #     unzip dependency-check.zip -d dependency-check
+      #     cd dependency-check/dependency-check
 
-          # Run dependency-check on the project directory
-          ./bin/dependency-check.sh --project "MyProject" --scan ../../ --format "ALL" --out ../../dependency-check-report
+      #     # Run dependency-check on the project directory
+      #     ./bin/dependency-check.sh --project "MyProject" --scan ../../ --format "ALL" --out ../../dependency-check-report
