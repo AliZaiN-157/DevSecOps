@@ -26,7 +26,7 @@ const PricingColumn: React.FC<Props> = ({ tier, highlight }: Props) => {
                 </button>
             </div>
             <div className="p-6 mt-1">
-                <p className="font-bold mb-0">FEATURES</p>
+                <p className="font-bold mb-0">Features</p>
                 <p className="text-foreground-accent mb-5">Everything in basic, plus...</p>
                 <ul className="space-y-4 mb-8">
                     {features.map((feature, index) => (
