@@ -49,11 +49,23 @@ jobs:
           echo "RMonitoring project with Snyk..."
           snyk monitor --all-projects
 
-      # - name: Install and run OWASP Dependency-Check
-      #   run: |
-      #     echo "Downloading and installing OWASP Dependency-Check..."
-      #     wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
-      #     unzip dependency-check-12.1.0-release.zip
-      #     echo "Running OWASP Dependency-Check scan..."
-      #     cd dependency-check/bin
-      #     ./dependency-check.sh --scan ../.. --format ALL --nvdApiKey ${{ secrets.NVD_API_KEY }}
+      - name: Install and run OWASP Dependency-Check
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: |
+          echo "Downloading and installing OWASP Dependency-Check..."
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
+          unzip dependency-check-12.1.0-release.zip
+          echo "Running OWASP Dependency-Check scan..."
+          cd dependency-check/bin
+          ./dependency-check.sh --scan ../.. --format ALL --nvdApiKey "${NVD_API_KEY}" --out ../reports --failOnCVSS 7 --data /tmp/dependency-check-data
+      
+      - name: Docker build and push
+        run: |
+            #run commands to build and push docker images
+            docker build -t finwise .
+            docker tag finwise ${{ secrets.DOCKERHUB_USERNAME }}/demo:latest
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+            docker push ${{ secrets.DOCKERHUB_USERNAME }}/demo:latest
+        env:
+            DOCKER_CLI_ACI: 1
