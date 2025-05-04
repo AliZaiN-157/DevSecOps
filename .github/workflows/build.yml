@@ -103,4 +103,4 @@ jobs:
         run: npm install -g vercel
 
       - name: Deploy to Vercel
-        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }} --scope devsecops-team --project devsecops
+        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }} --scope alizain157 --project devsecops
