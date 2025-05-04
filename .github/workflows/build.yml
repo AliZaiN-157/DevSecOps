@@ -74,6 +74,8 @@ jobs:
     needs: build-analyze-scan
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo for Vercel deployment
+        uses: actions/checkout@v2
       - name: Pull the docker image
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/demo:latest
 
@@ -88,8 +90,6 @@ jobs:
 
       # - name: Run the container finwise
       #   run: docker run -d --name finwise -p 8081:80 ${{ secrets.DOCKERHUB_USERNAME }}/demo:latest
-      - name: Checkout repo for Vercel deployment
-        uses: actions/checkout@v2
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -103,4 +103,4 @@ jobs:
         run: npm install -g vercel
 
       - name: Deploy to Vercel
-        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }} --scope alizain157 --project devsecops
+        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }} --scope alizain-157 --project devsecops
