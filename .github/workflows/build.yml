@@ -72,6 +72,7 @@ jobs:
   deploy:
     name: Deploy App
     needs: build-analyze-scan
+    if: success()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo for Vercel deployment
@@ -91,16 +92,16 @@ jobs:
       # - name: Run the container finwise
       #   run: docker run -d --name finwise -p 8081:80 ${{ secrets.DOCKERHUB_USERNAME }}/demo:latest
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
+      # - name: Install Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: "18"
 
-      - name: Install dependencies
-        run: npm install
+      # - name: Install dependencies
+      #   run: npm install
 
       - name: Install Vercel CLI
         run: npm install -g vercel
 
       - name: Deploy to Vercel
-        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }} --scope alizain-157 --project devsecops
+        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
